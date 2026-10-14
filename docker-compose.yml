@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: rdd
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_DB: rdd
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rdd"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://rdd:${POSTGRES_PASSWORD:-change-me}@postgres:5432/rdd
+      MODEL_CHECKPOINT: /repo/artifacts/checkpoints/best.pt
+      CLASSES_FILE: /repo/ml/configs/classes.json
+      EVAL_METRICS_FILE: /repo/artifacts/evaluation/metrics.json
+      CORS_ORIGINS: http://localhost:5173,http://localhost:8080
+    volumes:
+      - ./artifacts:/repo/artifacts:ro   # checkpoint is mounted, not baked into the image
+    depends_on:
+      postgres: { condition: service_healthy }
+    ports: ["8000:8000"]
+
+  frontend:
+    build:
+      context: frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8000
+    ports: ["8080:80"]
+    depends_on: [backend]
+
+volumes:
+  pgdata:
