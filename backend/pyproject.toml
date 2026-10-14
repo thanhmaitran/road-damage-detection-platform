@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rdd-backend"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.110", "uvicorn[standard]>=0.29", "python-multipart>=0.0.9",
+  "sqlalchemy>=2.0", "pillow>=10", "psycopg[binary]>=3.1",
+]
+
+[project.optional-dependencies]
+ml = ["torch", "torchvision", "torchmetrics", "pycocotools"]
+dev = ["pytest>=8", "httpx>=0.27", "ruff>=0.4"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+
+[tool.setuptools.packages.find]
+include = ["app*"]
