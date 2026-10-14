@@ -1,0 +1,6 @@
+{
+  "D00": "longitudinal_crack",
+  "D10": "transverse_crack",
+  "D20": "alligator_crack",
+  "D40": "pothole"
+}

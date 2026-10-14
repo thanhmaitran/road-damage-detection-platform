@@ -1,0 +1,15 @@
+{
+  "seed": 42,
+  "batch_size": 4,
+  "epochs": 10,
+  "learning_rate": 0.0001,
+  "num_workers": 2,
+  "model_name": "fasterrcnn_resnet50_fpn",
+  "min_size": 640,
+  "max_size": 1066,
+  "pretrained": true,
+  "max_train_images": null,
+  "max_val_images": 500,
+  "manifest": "data/splits/manifest.csv",
+  "checkpoint_dir": "artifacts/checkpoints"
+}
